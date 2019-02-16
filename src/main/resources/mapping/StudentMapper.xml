@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lianjia.springbootsql.mapper.StudentMapper" >
+    <resultMap id="BaseResultMap" type="com.lianjia.springbootsql.bean.Student">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="class_id" property="classId" jdbcType="INTEGER" />
+        <result column="aaa" property="aaa" jdbcType="INTEGER" />
+        <association property="class11" javaType="com.lianjia.springbootsql.bean.Class">
+            <id property="id" column="class_id"/>
+            <result property="name" column="class_name"/>
+        </association>
+    </resultMap>
+    <select id="findStudentById" resultMap="BaseResultMap" parameterType="com.lianjia.springbootsql.bean.Student">
+        select * from student where id =#{id}
+    </select>
+    <select id="getStudentByClassID" resultMap="BaseResultMap" parameterType="com.lianjia.springbootsql.bean.Student">
+        select * from student where class_id=#{classId}
+    </select>
+    <select id="findStudentById1" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select a.id, a.name, a.class_id, a.aaa, b.id as class_id, b.name as class_name from student a, class b where a.class_id=b.id and a.id =#{id}
+    </select>
+</mapper>

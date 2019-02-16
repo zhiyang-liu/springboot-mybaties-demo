@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lianjia.springbootsql.mapper.ClassMapper" >
+    <resultMap id="BaseResultMap" type="com.lianjia.springbootsql.bean.Class">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <collection property="studentList" column="id" javaType="ArrayList"
+                    ofType="com.lianjia.springbootsql.bean.Student" select="com.lianjia.springbootsql.mapper.StudentMapper.getStudentByClassID"/>
+    </resultMap>
+
+    <select id="findClassById" resultMap="BaseResultMap" parameterType="com.lianjia.springbootsql.bean.Class">
+        select * from class where id =#{id}
+    </select>
+
+    <!--推荐  第二种方法，缺点需要再配置一遍表b的参数与列。第一种则不需要-->
+
+    <resultMap id="BaseResultMap1" type="com.lianjia.springbootsql.bean.Class">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <collection property="studentList"
+                    ofType="com.lianjia.springbootsql.bean.Student">
+            <id column="b_id" property="id" jdbcType="INTEGER" />
+            <result column="b_name" property="name" jdbcType="VARCHAR" />
+            <result column="class_id" property="classId" jdbcType="INTEGER" />
+            <result column="aaa" property="aaa" jdbcType="INTEGER" />
+        </collection>
+    </resultMap>
+    <!--修改column为b_name，否则会将a的name注入到b-->
+    <select id="findClassById1" resultMap="BaseResultMap1" parameterType="com.lianjia.springbootsql.bean.Class">
+        select a.id,a.name,b.id as b_id,b.name as b_name,b.class_id,b.aaa from class a, student b where a.id = b.class_id and a.id = #{id}
+    </select>
+
+</mapper>
